@@ -1,0 +1,23 @@
+html, body {
+	/*font-family: 'Source Sans Pro', sans-serif;*/
+	font-family: 'Lato', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	background: url('../img/space.jpg') no-repeat center center fixed
+		!important;
+	background-size: contain;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+/* Header */
+body>.header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1030;
+}
+
+.divider {
+	margin-right: 1px solid #f1f2f7;
+}
