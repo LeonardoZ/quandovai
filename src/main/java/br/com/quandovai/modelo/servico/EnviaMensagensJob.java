@@ -1,10 +1,10 @@
-package br.com.quandovai.job;
+package br.com.quandovai.modelo.servico;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import br.com.quandovai.modelo.Mensagem;
+import br.com.quandovai.modelo.entidade.Mensagem;
 
 public class EnviaMensagensJob implements Job {
 

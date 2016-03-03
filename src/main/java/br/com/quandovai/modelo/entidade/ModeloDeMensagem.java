@@ -1,9 +1,11 @@
-package br.com.quandovai.modelo;
+package br.com.quandovai.modelo.entidade;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,13 +13,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import br.com.quandovai.modelo.entidade.Entidade;
-import br.com.quandovai.modelo.entidade.TipoEnvio;
-
 @Entity
 @Table(name = "modelo_mensagens")
 @Where(clause = "deletado = 0")
-@SQLDelete(sql = "update modelo_mensagens set deletado = 1 where id = ?")
+@SQLDelete(sql = "update modelos_mensagen set deletado = 1 where id = ?")
 public class ModeloDeMensagem extends Entidade {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +28,10 @@ public class ModeloDeMensagem extends Entidade {
     @Column(length = 5, name = "tipo_envio")
     private TipoEnvio tipoDeEnvio;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+    
     public String getConteudo() {
 	return conteudo;
     }

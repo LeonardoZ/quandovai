@@ -28,7 +28,7 @@ public class ClienteDao {
     }
 
     public void salvar(Collection<Cliente> clientes) {
-	dao.salvar(clientes);
+	dao.salvar(clientes, 100);
     }
 
     public Cliente buscaPorId(Long id) {

@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.quandovai.modelo.Mensagem;
 import br.com.quandovai.modelo.PaginatedList;
+import br.com.quandovai.modelo.entidade.Mensagem;
 
 public class MensagemDao {
 

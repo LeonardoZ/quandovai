@@ -41,13 +41,13 @@ public class GenericDao<T extends Entidade> {
 	manager.flush();
     }
 
-    public void salvar(Collection<T> entities) {
+    public void salvar(Collection<T> entities, int batchSize) {
 	final List<T> savedEntities = new ArrayList<T>(entities.size());
 	int i = 0;
 	for (T t : entities) {
 	    savedEntities.add(salvaOuAtualiza(t));
 	    i++;
-	    if (i % 100 == 0) {
+	    if (i % batchSize == 0) {
 		// Flush a batch of inserts and release memory.
 		manager.flush();
 		manager.clear();

@@ -1,4 +1,4 @@
-package br.com.quandovai.modelo;
+package br.com.quandovai.modelo.entidade;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,14 +12,16 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import br.com.quandovai.daos.LocalDateTimeAttributeConverter;
-import br.com.quandovai.modelo.entidade.Entidade;
-import br.com.quandovai.modelo.entidade.TipoEnvio;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Entity
 @Table(name = "mensagens")
@@ -32,9 +34,6 @@ public class Mensagem extends Entidade {
     @Column(nullable = false)
     private String conteudo;
 
-    @Column
-    private boolean enviado;
-
     @Enumerated(EnumType.STRING)
     @Column(length = 5, name = "tipo_envio")
     private TipoEnvio tipoDeEnvio;
@@ -43,6 +42,10 @@ public class Mensagem extends Entidade {
     @Column(length = 5, name = "data_hora_envio")
     private LocalDateTime dateHoraDeEnvio;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     public Mensagem() {
 
     }
@@ -50,7 +53,6 @@ public class Mensagem extends Entidade {
     public Mensagem(String conteudo, boolean enviado, String tipoDeEnvio, LocalDateTime dateHoraDeEnvio) {
 	super();
 	this.conteudo = conteudo;
-	this.enviado = enviado;
 	this.tipoDeEnvio = TipoEnvio.porNome(tipoDeEnvio);
 	this.dateHoraDeEnvio = dateHoraDeEnvio;
     }
@@ -61,14 +63,6 @@ public class Mensagem extends Entidade {
 
     public void setConteudo(String conteudo) {
 	this.conteudo = conteudo;
-    }
-
-    public boolean isEnviado() {
-	return enviado;
-    }
-
-    public void setEnviado(boolean enviado) {
-	this.enviado = enviado;
     }
 
     public TipoEnvio getTipoDeEnvio() {
@@ -109,10 +103,36 @@ public class Mensagem extends Entidade {
 	this.dateHoraDeEnvio = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }
 
+    public Usuario getUsuario() {
+	return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+	this.usuario = usuario;
+    }
+    
+    
+
     @Override
     public String toString() {
-	return "Mensagem [id=" + getId() + ", conteudo=" + conteudo + ", enviado=" + enviado + ", tipoDeEnvio="
-		+ tipoDeEnvio + ", dateHoraDeEnvio=" + dateHoraDeEnvio + "]";
+	return "Mensagem [id=" + getId() + ", conteudo=" + conteudo + " tipoDeEnvio=" + tipoDeEnvio
+		+ ", dateHoraDeEnvio=" + dateHoraDeEnvio + "]";
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (!(other instanceof Mensagem)) {
+            return false;
+        }
+        Mensagem castOther = (Mensagem) other;
+        return new EqualsBuilder().append(conteudo, castOther.conteudo).append(tipoDeEnvio, castOther.tipoDeEnvio)
+        	.append(dateHoraDeEnvio, castOther.dateHoraDeEnvio).append(usuario, castOther.usuario).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(conteudo).append(tipoDeEnvio).append(dateHoraDeEnvio).append(usuario)
+        	.toHashCode();
     }
 
 }
