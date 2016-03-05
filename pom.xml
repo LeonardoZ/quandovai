@@ -27,7 +27,18 @@
 		<JBOSS_HOME>${env.JBOSS_HOME}</JBOSS_HOME>
 		<wildfly.hibernate.datasource.name>java:jboss/datasources/quandoVaiDS</wildfly.hibernate.datasource.name>
 	</properties>
-
+	<repositories>
+		<repository>
+			<id>sonatype-oss-public</id>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -130,6 +141,11 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+		</dependency>
 
 		<!-- VRaptor -->
 		<dependency>
@@ -169,18 +185,22 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-persistence-api</artifactId>
-            <version>1.0.0.Alpha6</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-persistence-impl</artifactId>
-            <version>1.0.0.Alpha6</version>
-            <scope>test</scope>
-        </dependency>
-
+			<groupId>org.jboss.arquillian.extension</groupId>
+			<artifactId>arquillian-persistence-api</artifactId>
+			<version>1.0.0.Alpha6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.extension</groupId>
+			<artifactId>arquillian-persistence-impl</artifactId>
+			<version>1.0.0.Alpha6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>br.com.prixma</groupId>
+			<artifactId>vraptor-tasks</artifactId>
+			<version>4.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>

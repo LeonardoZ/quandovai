@@ -16,10 +16,12 @@ public class EnvioDeMensagemFactory {
 
     private ModeloDeMensagem modelo;
     private Cliente cliente;
+    private Provedor provedor;
     
-    public EnvioDeMensagemFactory(ModeloDeMensagem modelo, Cliente cliente) {
+    public EnvioDeMensagemFactory(ModeloDeMensagem modelo, Cliente cliente, Provedor provedor) {
 	this.modelo = modelo;
 	this.cliente = cliente;
+	this.provedor = provedor;
     }
 
     /**
@@ -68,7 +70,7 @@ public class EnvioDeMensagemFactory {
 	mensagem.setConteudo(modelo.getConteudo());
 	mensagem.setDateHoraDeEnvio(dataEspecifica);
 	mensagem.setTipoDeEnvio(TipoEnvio.SMS);
-	return EnvioDeMensagem.criarEnvio(cliente, mensagem);
+	return EnvioDeMensagem.criarEnvio(cliente, mensagem, provedor);
     }
 
     public void deveEstarNoFuturo(LocalDateTime data) {

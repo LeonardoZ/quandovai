@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import br.com.quandovai.modelo.EnvioDeMensagemFactory;
 import br.com.quandovai.modelo.Periodo;
+import br.com.quandovai.modelo.Provedor;
 import br.com.quandovai.modelo.entidade.Cliente;
 import br.com.quandovai.modelo.entidade.EnvioDeMensagem;
 import br.com.quandovai.modelo.entidade.ModeloDeMensagem;
@@ -20,6 +21,7 @@ public class EnvioDeMensagemFactoryTest {
 
     private Cliente cliente;
     private ModeloDeMensagem modelo;
+    private Provedor provedor;
 
     @Before
     public void setUp() throws Exception {
@@ -32,11 +34,13 @@ public class EnvioDeMensagemFactoryTest {
 	cliente.setEmail("antonio.nunes@gmail.com");
 	cliente.setCelular("5514991233333");
 	cliente.setSexo(Sexo.MASCULINO);
+
+	provedor = Provedor.SMS_API;
     }
 
     @Test
     public void agendarAgoraTest() {
-	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente);
+	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente, provedor);
 	EnvioDeMensagem envio = agendador.enviarAgora();
 	assertEquals(envio.getMensagem().getDateHoraDeEnvio().getHour(), LocalDateTime.now().getHour());
 	assertEquals(envio.getMensagem().getDateHoraDeEnvio().getMinute(), LocalDateTime.now().getMinute());
@@ -44,7 +48,7 @@ public class EnvioDeMensagemFactoryTest {
 
     @Test
     public void agendarEnvioSimplesTest() {
-	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente);
+	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente, provedor);
 	LocalDateTime dataDeEnvio = LocalDateTime.of(2016, 4, 27, 10, 41);
 	EnvioDeMensagem envio = agendador.agendarEnvioSimples(dataDeEnvio);
 
@@ -54,7 +58,7 @@ public class EnvioDeMensagemFactoryTest {
 
     @Test
     public void agendarEnviosEspecificosTest() {
-	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente);
+	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente, provedor);
 	LocalDateTime data1 = LocalDateTime.of(2016, 4, 27, 10, 41);
 	LocalDateTime data2 = LocalDateTime.of(2016, 5, 17, 12, 41);
 	LocalDateTime data3 = LocalDateTime.of(2016, 3, 12, 3, 41);
@@ -71,7 +75,7 @@ public class EnvioDeMensagemFactoryTest {
 
     @Test
     public void agendarEnviosComPeriodoTest() {
-	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente);
+	EnvioDeMensagemFactory agendador = new EnvioDeMensagemFactory(modelo, cliente, provedor);
 	LocalDateTime data1 = LocalDateTime.of(2016, 4, 27, 10, 41);
 	LocalDateTime data2 = LocalDateTime.of(2016, 5, 27, 10, 41);
 	LocalDateTime data3 = LocalDateTime.of(2016, 6, 27, 10, 41);

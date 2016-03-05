@@ -26,6 +26,7 @@ import br.com.quandovai.daos.EnvioDeMensagemDao;
 import br.com.quandovai.daos.ModeloDeMensagemDao;
 import br.com.quandovai.modelo.EnvioDeMensagemFactory;
 import br.com.quandovai.modelo.Periodo;
+import br.com.quandovai.modelo.Provedor;
 import br.com.quandovai.modelo.StatusEntrega;
 import br.com.quandovai.modelo.entidade.Cliente;
 import br.com.quandovai.modelo.entidade.EnvioDeMensagem;
@@ -71,7 +72,7 @@ public class EnvioDeMensagemDaoTest {
 	configuraTeste();
 	ModeloDeMensagem modelo = modeloDao.buscaPorId(1l);
 	Cliente cliente = clienteDao.buscaPorId(1l);
-	factory = new EnvioDeMensagemFactory(modelo, cliente);
+	factory = new EnvioDeMensagemFactory(modelo, cliente, Provedor.SMS_API);
     }
 
     @Test
