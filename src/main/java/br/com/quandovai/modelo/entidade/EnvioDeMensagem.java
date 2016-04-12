@@ -28,11 +28,18 @@ import br.com.quandovai.modelo.StatusEntrega;
 @Table(name = "envio_mensagem")
 @Where(clause = "deletado = 0")
 @SQLDelete(sql = "update envio_mensagem set deletado = 1 where id = ?")
-@NamedQueries({ @NamedQuery(name = "envioMensagem.ultimasDe5Minutos", query = "select e from EnvioDeMensagem e "
-	+ "where (e.mensagem.dateHoraDeEnvio between :inicial and :final) "
-	+ "and (e.status = :agendado or e.status = :reenviar) " + "order by e.mensagem.dateHoraDeEnvio desc")
+@NamedQueries({
+	@NamedQuery(name = "envioMensagem.ultimasDe5Minutos", query = "select e from EnvioDeMensagem e "
+		+ "where "
+		+ "((e.mensagem.dateHoraDeEnvio between :inicial and :final) "
+		+ "and (e.status = :agendado or e.status = :reenviar)) "
+		+ "or " 
+		+ "( (e.mensagem.dateHoraDeEnvio < :final) "
+		+ "and (e.status = :agendado or e.status = :reenviar) ) " 
+		+ "order by e.mensagem.dateHoraDeEnvio desc"),
+	@NamedQuery(name = "envioMensagem.buscaPorConteudo", query = "select m from EnvioDeMensagem m where m.mensagem.conteudo like :conteudo"),
+	@NamedQuery(name = "envioMensagem.countPorConteudo", query = "select count(m) from EnvioDeMensagem m where m.mensagem.conteudo like :conteudo") })
 
-})
 public class EnvioDeMensagem extends Entidade {
 
     private static final long serialVersionUID = 1L;
@@ -104,7 +111,7 @@ public class EnvioDeMensagem extends Entidade {
 	setStatus(StatusEntrega.ENVIADO);
     }
 
-    public static EnvioDeMensagem criarEnvio(Cliente cliente, Mensagem mensagem,Provedor provedor) {
+    public static EnvioDeMensagem criarEnvio(Cliente cliente, Mensagem mensagem, Provedor provedor) {
 	EnvioDeMensagem envio = new EnvioDeMensagem();
 	envio.setCliente(cliente);
 	envio.setMensagem(mensagem);

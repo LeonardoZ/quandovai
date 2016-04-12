@@ -6,6 +6,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,7 +18,13 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "modelo_mensagens")
 @Where(clause = "deletado = 0")
-@SQLDelete(sql = "update modelos_mensagen set deletado = 1 where id = ?")
+@SQLDelete(sql = "update modelo_mensagen set deletado = 1 where id = ?")
+@NamedQueries({
+	@NamedQuery(name="Modelo.buscaPorConteudo",
+		    query="select m from ModeloDeMensagem m where m.conteudo like :conteudo"),
+	@NamedQuery(name="Modelo.countPorConteudo",
+		    query="select count(m) from ModeloDeMensagem m where m.conteudo like :conteudo")}
+)
 public class ModeloDeMensagem extends Entidade {
 
     private static final long serialVersionUID = 1L;
@@ -61,6 +69,11 @@ public class ModeloDeMensagem extends Entidade {
     @Override
     public int hashCode() {
 	return new HashCodeBuilder().append(conteudo).append(tipoDeEnvio).toHashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return conteudo;
     }
 
 }

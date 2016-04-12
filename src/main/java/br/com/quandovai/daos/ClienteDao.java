@@ -2,6 +2,7 @@ package br.com.quandovai.daos;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.persistence.TypedQuery;
@@ -34,6 +35,13 @@ public class ClienteDao {
     public Cliente buscaPorId(Long id) {
 	return dao.buscaPorId(id);
     }
+    
+    public List<Cliente> buscaPorIds(List<Long> ids) {
+  	return ids.stream()
+  		  .map(this::buscaPorId)
+  		  .collect(Collectors.toList());
+     }
+
 
     public void remover(Cliente cliente) {
 	dao.remover(cliente);
@@ -44,10 +52,9 @@ public class ClienteDao {
     }
 
     public PaginatedList paginado(String busca, int page, int max) {
-	TypedQuery<Cliente> resultados = dao.getManager().createNamedQuery("Cliente.buscaPorNomeParcial",
+	TypedQuery<Cliente> resultados = dao.getManager().createNamedQuery("ModeloDeMensagem.buscaPorNomeParcial",
 		Cliente.class);
 	busca = "%" + busca + "%";
-	System.err.println(busca);
 	resultados.setParameter("nome", busca);
 	TypedQuery<Number> contagem = dao.getManager().createNamedQuery("Cliente.countPorNomeParcial", Number.class);
 	contagem.setParameter("nome", busca);
@@ -56,6 +63,11 @@ public class ClienteDao {
 
     public PaginatedList paginado(int page, int max) {
 	return dao.paginado(page, max);
+    }
+
+    public List<Cliente> buscaPorNome(String nomeDoCliente) {
+	return dao.getManager().createNamedQuery("Cliente.buscaPorNomeParcial", Cliente.class)
+		.setParameter("nome", "%" + nomeDoCliente + "%").getResultList();
     }
 
 }

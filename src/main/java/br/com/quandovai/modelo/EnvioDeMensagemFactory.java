@@ -17,11 +17,27 @@ public class EnvioDeMensagemFactory {
     private ModeloDeMensagem modelo;
     private Cliente cliente;
     private Provedor provedor;
+    private List<Cliente> clientes;
     
+    public EnvioDeMensagemFactory(ModeloDeMensagem modelo, Provedor provedor) {
+	this.modelo = modelo;
+	this.provedor = provedor;
+    }
+
     public EnvioDeMensagemFactory(ModeloDeMensagem modelo, Cliente cliente, Provedor provedor) {
 	this.modelo = modelo;
 	this.cliente = cliente;
 	this.provedor = provedor;
+    }
+    
+    public EnvioDeMensagemFactory para(Cliente cliente){
+	this.cliente = cliente;
+	return this;
+    }
+    
+    public EnvioDeMensagemFactory para(List<Cliente> clientes){
+	this.clientes = clientes;
+	return this;
     }
 
     /**
@@ -30,7 +46,10 @@ public class EnvioDeMensagemFactory {
      * 
      * @return Mensagens para enviar
      */
-    public List<EnvioDeMensagem> agendarEnvioCom(Periodo periodoDeEnvio, int quantasVezes, LocalDateTime aPartirDe) {
+    public List<EnvioDeMensagem> agendarEnvioCom(
+	    Periodo periodoDeEnvio, 
+	    int quantasVezes, 
+	    LocalDateTime aPartirDe) {
 	if (quantasVezes < 1) {
 	    throw new IllegalArgumentException("O número mínimo de mensagens é 1");
 	}
@@ -57,15 +76,15 @@ public class EnvioDeMensagemFactory {
     }
 
     public EnvioDeMensagem enviarAgora() {
-	return criaMensagem(LocalDateTime.now());
+	return criaMensagem(LocalDateTime.now(), cliente);
     }
 
     public EnvioDeMensagem agendarEnvioSimples(LocalDateTime dataEspecifica) {
 	deveEstarNoFuturo(dataEspecifica);
-	return criaMensagem(dataEspecifica);
+	return criaMensagem(dataEspecifica, cliente);
     }
 
-    private EnvioDeMensagem criaMensagem(LocalDateTime dataEspecifica) {
+    private EnvioDeMensagem criaMensagem(LocalDateTime dataEspecifica, Cliente cliente) {
 	Mensagem mensagem = new Mensagem();
 	mensagem.setConteudo(modelo.getConteudo());
 	mensagem.setDateHoraDeEnvio(dataEspecifica);

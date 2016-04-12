@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+.scroll {
+	max-height: 310px;
+	overflow-y: scroll;  
+}
+
+.scroll-large {
+	max-height: 610px;
+	overflow-y: scroll;  
+}
+
+.form-large {
+	max-width: 1024px;
+}

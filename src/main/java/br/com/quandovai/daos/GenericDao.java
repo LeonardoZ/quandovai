@@ -33,7 +33,12 @@ public class GenericDao<T extends Entidade> {
     }
 
     public List<T> todos() {
-	return manager.createQuery(queryTodos, classeDoTipo).getResultList();
+	try {
+	    return manager.createQuery(queryTodos, classeDoTipo).getResultList();
+	} catch (RuntimeException ex) {
+	    ex.printStackTrace();
+	    return null;
+	}
     }
 
     public void salvar(T t) {
@@ -53,6 +58,7 @@ public class GenericDao<T extends Entidade> {
 		manager.clear();
 	    }
 	}
+	manager.flush();
     }
 
     private T salvaOuAtualiza(T t) {
@@ -73,7 +79,11 @@ public class GenericDao<T extends Entidade> {
     }
 
     public void atualizar(T t) {
-	manager.merge(t);
+	try {
+	    manager.merge(t);
+	} catch (RuntimeException e) {
+	    e.printStackTrace();
+	}
     }
 
     public PaginatedList paginado(TypedQuery<T> query, TypedQuery<Number> countQuery, int page, int max) {

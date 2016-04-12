@@ -12,6 +12,8 @@ public class LocalDateTimeAttributeConverter implements AttributeConverter<Local
 
     @Override
     public Date convertToDatabaseColumn(LocalDateTime attribute) {
+	if (attribute == null)
+	    return null;
 	Instant instant = attribute.toInstant(ZoneOffset.UTC);
 	Date fromInstant = Date.from(instant);
 	return fromInstant;
@@ -19,6 +21,8 @@ public class LocalDateTimeAttributeConverter implements AttributeConverter<Local
 
     @Override
     public LocalDateTime convertToEntityAttribute(Date dbData) {
+	if (dbData == null)
+	    return null;
 	Instant instant = Instant.ofEpochMilli(dbData.getTime());
 	return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }

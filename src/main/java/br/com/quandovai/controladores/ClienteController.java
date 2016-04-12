@@ -71,10 +71,6 @@ public class ClienteController {
 	result.redirectTo(this).listar(1, "");
     }
 
-    private void carregarDependenciasFormulario() {
-	result.include("sexos", Sexo.values());
-    }
-
     @Transactional
     @Post("/remover/{id}")
     public void remover(Long id) {
@@ -83,6 +79,10 @@ public class ClienteController {
 	    clienteDao.remover(cliente);
 	    result.redirectTo(this).listar(1, "");
 	}
+    }
+
+    private void carregarDependenciasFormulario() {
+	result.include("sexos", Sexo.values());
     }
 
 }

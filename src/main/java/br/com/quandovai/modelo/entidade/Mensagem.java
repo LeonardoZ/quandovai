@@ -14,19 +14,24 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import br.com.quandovai.daos.LocalDateTimeAttributeConverter;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Entity
 @Table(name = "mensagens")
 @Where(clause = "deletado = 0")
 @SQLDelete(sql = "update mensagens set deletado = 1 where id = ?")
+@NamedQueries({
+	@NamedQuery(name = "Mensagem.buscaPorConteudo", query = "select m from Mensagem m where m.conteudo like :conteudo"),
+	@NamedQuery(name = "Mensagem.countPorConteudo", query = "select count(m) from Mensagem m where m.conteudo like :conteudo") })
 public class Mensagem extends Entidade {
 
     private static final long serialVersionUID = 1L;
@@ -77,15 +82,16 @@ public class Mensagem extends Entidade {
 	return dateHoraDeEnvio;
     }
 
+    public LocalDateTime horaDeEnvioAjustada() {
+	return ehAntigaNaoEnviada() ? novaDataDeEnvio() : dateHoraDeEnvio;
+    }
+
     public boolean ehAntigaNaoEnviada() {
 	return dateHoraDeEnvio.isBefore(LocalDateTime.now());
     }
 
-    public Date novaDataDeEnvio() {
-	LocalDateTime plus = LocalDateTime.now().plus(1, ChronoUnit.MINUTES);
-	Instant instant = plus.toInstant(ZoneOffset.UTC);
-	Date fromInstant = Date.from(instant);
-	return fromInstant;
+    public LocalDateTime novaDataDeEnvio() {
+	return LocalDateTime.now().plus(1, ChronoUnit.MINUTES);
     }
 
     public Date dateHoraDeEnvioConvertido() {
@@ -110,8 +116,6 @@ public class Mensagem extends Entidade {
     public void setUsuario(Usuario usuario) {
 	this.usuario = usuario;
     }
-    
-    
 
     @Override
     public String toString() {
@@ -121,18 +125,18 @@ public class Mensagem extends Entidade {
 
     @Override
     public boolean equals(final Object other) {
-        if (!(other instanceof Mensagem)) {
-            return false;
-        }
-        Mensagem castOther = (Mensagem) other;
-        return new EqualsBuilder().append(conteudo, castOther.conteudo).append(tipoDeEnvio, castOther.tipoDeEnvio)
-        	.append(dateHoraDeEnvio, castOther.dateHoraDeEnvio).append(usuario, castOther.usuario).isEquals();
+	if (!(other instanceof Mensagem)) {
+	    return false;
+	}
+	Mensagem castOther = (Mensagem) other;
+	return new EqualsBuilder().append(conteudo, castOther.conteudo).append(tipoDeEnvio, castOther.tipoDeEnvio)
+		.append(dateHoraDeEnvio, castOther.dateHoraDeEnvio).append(usuario, castOther.usuario).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(conteudo).append(tipoDeEnvio).append(dateHoraDeEnvio).append(usuario)
-        	.toHashCode();
+	return new HashCodeBuilder().append(conteudo).append(tipoDeEnvio).append(dateHoraDeEnvio).append(usuario)
+		.toHashCode();
     }
 
 }

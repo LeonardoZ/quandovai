@@ -3,6 +3,7 @@ package br.com.quandovai.daos;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.TypedQuery;
 
 import br.com.quandovai.modelo.PaginatedList;
 import br.com.quandovai.modelo.entidade.Mensagem;
@@ -35,6 +36,16 @@ public class MensagemDao {
 
     public void atualizar(Mensagem mensagem) {
 	dao.atualizar(mensagem);
+    }
+
+    public PaginatedList paginado(String busca, int page, int max) {
+	TypedQuery<Mensagem> resultados = dao.getManager().createNamedQuery("Mensagem.buscaPorConteudo",
+		Mensagem.class);
+	busca = "%" + busca + "%";
+	resultados.setParameter("nome", busca);
+	TypedQuery<Number> contagem = dao.getManager().createNamedQuery("Mensagem.countPorConteudo", Number.class);
+	contagem.setParameter("nome", busca);
+	return dao.paginado(resultados, contagem, page, max);
     }
 
     public PaginatedList paginado(int page, int max) {

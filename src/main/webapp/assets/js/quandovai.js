@@ -96,7 +96,6 @@ $(function() {
 			$formRemover.attr("action", urlAcao);
 		}
 		configuraBotoesRemover();
-		console.log("Executei");
 	}());
 
 	var moduloComponentes = (function() {
@@ -111,9 +110,7 @@ $(function() {
 			var $input = $("#" + idOfInput);
 			var option = this.value;
 			var $select = $(this);
-			console.log($input);
-			console.log(option);
-
+			
 			if (option === "9digits") {
 				$input.removeClass("cellphone8");
 				$input.addClass("cellphone9");
@@ -155,7 +152,40 @@ $(function() {
 
 		var avaliaPodeBuscar = function(evt) {
 			var caracteres = $(this).val().length;
-			console.log(caracteres);
+			
+			if (caracteres >= 2) {
+				$btnBusca.removeAttr("disabled");
+			} else {
+				$btnBusca.attr("disabled", "disabled");
+			}
+			return false;
+		};
+
+		$inputBusca.bind("keyup", avaliaPodeBuscar);
+		$inputBusca.bind("blur", avaliaPodeBuscar);
+
+	}());
+
+	var moduloCadastroModelo = (function() {
+
+		var $btnBusca = $("#btn-busca");
+		var $inputBusca = $("#procurar-modelo");
+
+		$("#formCadastroModelo").validate({
+			rules : {
+				"modelo.conteudo" : {
+					minlength : 3,
+					maxlength : 150,
+					required : true
+				},
+				"modelo.tipoDeEnvio" : {
+					required : true
+				},
+			}
+		});
+
+		var avaliaPodeBuscar = function(evt) {
+			var caracteres = $(this).val().length;
 			if (caracteres >= 2) {
 				$btnBusca.removeAttr("disabled");
 			} else {

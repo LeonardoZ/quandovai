@@ -33,7 +33,7 @@
 
 		<div class="col-md-3">
 			<div class="sm-st clearfix">
-				<span class="sm-st-icon st-green"><i class="fa line-chart"></i></span>
+				<span class="sm-st-icon st-green"><i class="fa fa-bar-chart"></i></span>
 				<div class="sm-st-info">
 					<span>Gerencie</span> seus envios.
 				</div>

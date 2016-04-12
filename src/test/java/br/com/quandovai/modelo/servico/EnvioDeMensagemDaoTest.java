@@ -69,7 +69,6 @@ public class EnvioDeMensagemDaoTest {
     }
 
     private void configuraTeste() {
-	configuraTeste();
 	ModeloDeMensagem modelo = modeloDao.buscaPorId(1l);
 	Cliente cliente = clienteDao.buscaPorId(1l);
 	factory = new EnvioDeMensagemFactory(modelo, cliente, Provedor.SMS_API);
