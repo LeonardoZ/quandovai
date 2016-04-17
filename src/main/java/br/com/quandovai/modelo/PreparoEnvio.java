@@ -40,6 +40,8 @@ public class PreparoEnvio {
 	idsClientes = new LinkedList<>();
 	destinatarios = new LinkedList<>();
 	enviosProjetados = new LinkedList<>();
+	periodo = Periodo.DIARIO;
+	quantidade = 1;
     }
     
     public boolean ehUnicoEnvio(){
@@ -75,7 +77,7 @@ public class PreparoEnvio {
     }
 
     public void setQuantidade(int quantidade) {
-	this.quantidade = quantidade;
+	this.quantidade = quantidade == 0 ? 1 : quantidade;
     }
 
     public Periodo getPeriodo() {
@@ -83,7 +85,7 @@ public class PreparoEnvio {
     }
 
     public void setPeriodo(Periodo periodo) {
-	this.periodo = periodo;
+	this.periodo = periodo == null ? Periodo.DIARIO : periodo;
     }
 
     public LocalDateTime getDataHoraBase() {
