@@ -8,30 +8,30 @@ import java.util.List;
  */
 public class PaginatedList {
 
-    private final List<?> currentList;
-    private final Number count;
+	private final List<?> currentList;
+	private final Number count;
 
-    public PaginatedList(List<?> currentList, Number count) {
-	this.currentList = currentList;
-	this.count = count;
-    }
-
-    public List<?> getCurrentList() {
-	return currentList;
-    }
-
-    public int getCount() {
-	return count.intValue();
-    }
-
-    public int getNumberOfPages(int perPage) {
-	int total = getCount();
-	int pages = total / perPage;
-	System.out.println(total+" paginas "+pages);
-	if (total % perPage > 0) {
-	    pages++;
+	public PaginatedList(List<?> currentList, Number count) {
+		this.currentList = currentList;
+		this.count = count;
 	}
-	return pages == 0 ? 1 : pages;
-    }
+
+	public List<?> getCurrentList() {
+		return currentList;
+	}
+
+	public int getCount() {
+		return count.intValue();
+	}
+
+	public int getNumberOfPages(int perPage) {
+		int total = getCount();
+		int pages = total / perPage;
+		System.out.println(total + " paginas " + pages);
+		if (total % perPage > 0) {
+			pages++;
+		}
+		return pages == 0 ? 1 : pages;
+	}
 
 }

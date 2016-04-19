@@ -64,7 +64,7 @@
 									<td>${cliente.nomeCompleto}</td>
 									<td>${cliente.celular}</td>
 									<td>${cliente.email}</td>
-									<td><fmt:formatDate value="${cliente.dataAniversario}"/></td>
+									<td><fmt:formatDate pattern="dd/MM/yyyy" value="${cliente.dataAniversario}"/></td>
 									<td>
 										<a href="<c:url value='/cliente/alterar/${cliente.id}' />">
 											<span class="btn btn-success btn-sm">Editar</span>

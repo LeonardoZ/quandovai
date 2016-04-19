@@ -15,16 +15,17 @@ import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 @DependsOn(value = { "EnviaMensagemBean" })
 public class BuscaMensagemBean {
 
-    @Resource(lookup = "java:jboss/ee/concurrency/scheduler/pro")
-    private ManagedScheduledExecutorService scheduledService;
+//	@Resource(lookup = "java:jboss/ee/concurrency/scheduler/pro")
+	@Resource
+	private ManagedScheduledExecutorService scheduledService;
 
-    @EJB
-    private EnviaMensagemBean enviaBean;
+	@EJB
+	private EnviaMensagemBean enviaBean;
 
-    @PostConstruct
-    public void busca() {
-	Runnable r = () -> enviaBean.enviarMensagens();
-	scheduledService.scheduleAtFixedRate(r, 0, 5, TimeUnit.MINUTES);
-    }
+	@PostConstruct
+	public void busca() {
+		Runnable r = () -> enviaBean.enviarMensagens();
+		scheduledService.scheduleAtFixedRate(r, 0, 5, TimeUnit.MINUTES);
+	}
 
 }

@@ -26,6 +26,7 @@
 							<div class="form-group">
 								<label>Usar modelo?</label>
 								<select id="seleciona-modelo" class="form-control input-sm">
+									<option></option>
 									<c:forEach var="modelo" items="${modelos}">
 										<option value="${modelo}"> 
 											${modelo}
@@ -79,9 +80,8 @@
 										
 										<div class="col-md-4">
 										 	<div class="form-group">
-								                <label>Data/Hora base</label>
-								                <div class='input-group date'
-														id='grupo-data-base'>
+								                <label>Data/Hora de envio</label>
+								                <div class='input-group date grupo-data-base'>
 								                    <input type='text'
 															class="form-control input-sm" name="preparo.dataBase"
 															id="data-base-simples" />
@@ -130,8 +130,7 @@
 										<div class="col-md-4">
 										 	<div class="form-group">
 								                <label>Data/Hora base</label>
-								                <div class='input-group date'
-														id='grupo-data-base'>
+								                <div class='input-group date grupo-data-base'>
 								                    <input type='text'
 															class="form-control input-sm" name="preparo.dataBase"
 															id="data-base" />

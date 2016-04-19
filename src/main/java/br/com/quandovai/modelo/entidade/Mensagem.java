@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import br.com.quandovai.daos.LocalDateTimeAttributeConverter;
+import br.com.quandovai.conversores.LocalDateTimeAttributeConverter;
 
 @Entity
 @Table(name = "mensagens")

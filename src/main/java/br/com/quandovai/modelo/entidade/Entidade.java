@@ -16,36 +16,36 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deletado = 0")
 public class Entidade implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private long id;
 
-    @Column(name = "deletado")
-    private boolean deletado;
+	@Column(name = "deletado")
+	private boolean deletado;
 
-    public long getId() {
-	return id;
-    }
-
-    public void setId(long id) {
-	this.id = id;
-    }
-
-    @Override
-    public boolean equals(final Object other) {
-	if (!(other instanceof Entidade)) {
-	    return false;
+	public long getId() {
+		return id;
 	}
-	Entidade castOther = (Entidade) other;
-	return new EqualsBuilder().append(id, castOther.id).isEquals();
-    }
 
-    @Override
-    public int hashCode() {
-	return new HashCodeBuilder().append(id).toHashCode();
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@Override
+	public boolean equals(final Object other) {
+		if (!(other instanceof Entidade)) {
+			return false;
+		}
+		Entidade castOther = (Entidade) other;
+		return new EqualsBuilder().append(id, castOther.id).isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(id).toHashCode();
+	}
 
 }

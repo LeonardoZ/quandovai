@@ -80,6 +80,7 @@ $(function() {
 		};
 
 		var confirmaClientes = function(evt) {
+		
 			var ids = $("ul input:checked").toArray().map(toId);
 			var clis = shared["cli"];
 			var selectedIds = []
@@ -95,12 +96,13 @@ $(function() {
 			
 			shared["cli"] = selectedIds;
 			shared["cliJson"] = selectedClis;
-			console.log(shared);
 			
 			$inputBusca.val("");
 			$lista.empty();
 			
 			callback();
+
+			$chkMarcarTodosLista.removeAttr("checked");
 			$modal.modal("hide");
 
 		};
@@ -136,12 +138,21 @@ $(function() {
 		var $spanQuantidadeChars = $("#quantidade-chars");
 		var $spanQuantidadeMensagens = $("#quantidade-mensagens");
 		
+		var $selModelo = $("#seleciona-modelo");
 		var $selProvedor = $("#provedor");
 		var $selProvedorSimples = $("#provedor-simples");
 		
 		var $clientesLista = $("#clientes-selecionados");
 		var $enviosLista = $("#envios-sms");
-
+		
+		var preencheCampoComModelo = function () {
+			var conteudo = $selModelo.val();
+			
+			if(conteudo && conteudo !== "") {
+				$txtConteudo.val(conteudo);
+			}
+		}
+		
 		var configuraClientesCallback = function() {
 			$clientesLista.empty();
 			var clientes = shared["cliJson"];
@@ -217,33 +228,16 @@ $(function() {
 			
 		}
 		
-		var calculaEnviosAjax = function(preparo){
+		
+		
+		var calculaEnviosAjax = function(preparo, callbackSucesso){
 			var url = "/quandovai/envio/calcular";
 			$.ajax({
 				type : "POST",
 				url : url,
 				cache: false,
 				data : preparo,
-				success : function(data) {
-					var envios = data.list;
-					$enviosLista.empty();
-					for(var i = 0; i < envios.length; i++) {
-					    var envio = envios[i];
-					    var data = envio.mensagem.dateHoraDeEnvio.date,
-							tempo = envio.mensagem.dateHoraDeEnvio.time,
-							dia = data.day, mes = data.month, ano = data.year,
-							hora = tempo.hour, minuto = tempo.minute;
-						var cliente = " - "+envio.cliente.nomeCompleto;
-						var data = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
-						
-						
-						var li = "<li class='list-group-item'>" +data + cliente + "</li>";
-						var $li = $(li);	
-						$btnSalvar.removeAttr("disabled");
-						$enviosLista.append($li)
-					}
-						
-				},
+				success : callbackSucesso,
 				dataType : "json"
 			});
 		}
@@ -270,11 +264,32 @@ $(function() {
 			}
 			return preparo;
 		}
+		
+		var callbackMultiplos = function(data) {
+			var envios = data.list
+			$enviosLista.empty();
+			for(var i = 0; i < envios.length; i++) {
+			    var envio = envios[i];
+			    var data = envio.mensagem.dateHoraDeEnvio.date,
+					tempo = envio.mensagem.dateHoraDeEnvio.time,
+					dia = data.day, mes = data.month, ano = data.year,
+					hora = tempo.hour, minuto = tempo.minute;
+				var cliente = " - "+envio.cliente.nomeCompleto;
+				var data = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
+				
+				
+				var li = "<li class='list-group-item'>" +data + cliente + "</li>";
+				var $li = $(li);	
+				$btnSalvar.removeAttr("disabled");
+				$enviosLista.append($li)
+			}
+				
+		}
 
 		var fazEnvioCalculado = function(evt) {
 			var preparo = configuraPreparoCalculado();
 			$btnSalvar.attr("data-envio", "calculado");
-			calculaEnviosAjax(preparo);
+			calculaEnviosAjax(preparo, callbackMultiplos);
 			
 		}
 		
@@ -300,11 +315,28 @@ $(function() {
 			return preparo;
 		}
 		
+		var callbackSimples = function(data) {
+			var envio = data.envioDeMensagem;
+			$enviosLista.empty();
+			var data = envio.mensagem.dateHoraDeEnvio.date,
+				tempo = envio.mensagem.dateHoraDeEnvio.time,
+				dia = data.day, mes = data.month, ano = data.year,
+				hora = tempo.hour, minuto = tempo.minute;
+			var cliente = " - "+envio.cliente.nomeCompleto;
+			var data = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
+				
+				
+			var li = "<li class='list-group-item'>" +data + cliente + "</li>";
+			var $li = $(li);	
+			$btnSalvar.removeAttr("disabled");
+			$enviosLista.append($li)
+		}
+		
 		var fazEnvioSimples = function(evt) {
 			var preparo = configuraPreparoSimples();
 			$btnSalvar.attr("data-envio", "simples");
 			$btnSalvar.removeAttr("disabled");
-			calculaEnviosAjax(preparo);
+			calculaEnviosAjax(preparo, callbackSimples);
 		}
 		
 		var salvarEnvios = function(evt) {
@@ -330,10 +362,12 @@ $(function() {
 			});
 		}
 
-		$("#grupo-data-base").datetimepicker({
+		$(".grupo-data-base").datetimepicker({
 			format : "DD/MM/YYYY HH:mm",
 			locale : 'pt-br'
 		});
+		
+		
 
 		// Bind Envio SMS
 		$txtConteudo.bind("keyup", calculaValoresSmsKeyup);
@@ -343,6 +377,7 @@ $(function() {
 		$txtConteudo.bind("keyup blur", avaliaCalculoDeEnvio);
 		$txtConteudo.bind("keyup blur", avaliaCalculoDeEnvioSimples);
 		$txtDataBaseSimples.bind("keyup blur", avaliaCalculoDeEnvioSimples);
+		$selModelo.bind("change", preencheCampoComModelo);
 		
 		$clientesLista.delegate("li span", "click", removerCliente)
 		

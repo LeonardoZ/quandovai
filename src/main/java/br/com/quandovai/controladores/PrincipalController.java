@@ -5,8 +5,9 @@ import br.com.caelum.vraptor.Get;
 
 @Controller
 public class PrincipalController {
-    
-    @Get("/")
-    public void index() {}
+
+	@Get("/")
+	public void index() {
+	}
 
 }

@@ -9,30 +9,31 @@ import br.com.caelum.vraptor.core.InterceptorStack;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 
 public class AutenticacaoInterceptor implements Interceptor {
-    
-    @Inject
-    private UsuarioConectado usuarioConectado;
 
-    @Inject
-    private Result result;
+	@Inject
+	private UsuarioConectado usuarioConectado;
 
-    @Override
-    public void intercept(InterceptorStack stack, ControllerMethod method, Object controllerInstance)
-	    throws InterceptionException {
-//	boolean estaLogado = usuarioConectado.estaLogado();
-//	if (estaLogado) {
-//	    stack.next(method, controllerInstance);
-//	} else {
-//	    result.redirectTo(LoginController.class).loginForm(null, null);
-//	}
-	stack.next(method, controllerInstance);
-    }
+	@Inject
+	private Result result;
 
-    @Override
-    public boolean accepts(ControllerMethod method) {
-//	boolean acessoPublico = method.containsAnnotation(AcessoPublico.class);
-//	return !acessoPublico;
-	return false;
-    }
+	@Override
+	public void intercept(InterceptorStack stack, ControllerMethod method, Object controllerInstance)
+			throws InterceptionException {
+		// boolean estaLogado = usuarioConectado.estaLogado();
+		// if (estaLogado) {
+		// stack.next(method, controllerInstance);
+		// } else {
+		// result.redirectTo(LoginController.class).loginForm(null, null);
+		// }
+		stack.next(method, controllerInstance);
+	}
+
+	@Override
+	public boolean accepts(ControllerMethod method) {
+		// boolean acessoPublico =
+		// method.containsAnnotation(AcessoPublico.class);
+		// return !acessoPublico;
+		return false;
+	}
 
 }

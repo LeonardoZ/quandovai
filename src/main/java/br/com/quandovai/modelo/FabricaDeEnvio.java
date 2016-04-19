@@ -14,147 +14,146 @@ import br.com.quandovai.modelo.entidade.TipoEnvio;
 
 public class FabricaDeEnvio {
 
-    private Provedor provedor;
-    private String conteudo;
-    private LocalDateTime dataHoraBase;
+	private Provedor provedor;
+	private String conteudo;
+	private LocalDateTime dataHoraBase;
 
-
-    public static FabricaDeEnvio construir(String conteudo, Provedor provedor, LocalDateTime dataHoraBase) {
-	return new FabricaDeEnvio(conteudo, provedor, dataHoraBase);
-    }
-
-    private FabricaDeEnvio(String conteudo, Provedor provedor, LocalDateTime dataHoraBase) {
-	this.conteudo = conteudo;
-	this.provedor = provedor;
-	this.dataHoraBase = dataHoraBase;
-    }
-
-    public FabricaMultipla variasMensagens() {
-	return new FabricaMultipla();
-    }
-
-    public FabricaSimples unicaMensagem() {
-	return new FabricaSimples();
-    }
-
-    public class FabricaMultipla {
-
-	private List<Cliente> clientes;
-	private int quantidade;
-	private Periodo periodo;
-	private Cliente cliente;
-
-	private FabricaMultipla() {
+	public static FabricaDeEnvio construir(String conteudo, Provedor provedor, LocalDateTime dataHoraBase) {
+		return new FabricaDeEnvio(conteudo, provedor, dataHoraBase);
 	}
 
-	public FabricaMultipla variosClientes(List<Cliente> clientes) {
-	    this.clientes = clientes;
-	    return this;
+	private FabricaDeEnvio(String conteudo, Provedor provedor, LocalDateTime dataHoraBase) {
+		this.conteudo = conteudo;
+		this.provedor = provedor;
+		this.dataHoraBase = dataHoraBase;
 	}
 
-	public FabricaMultipla variasMensagens(int quantidade, Periodo periodo) {
-	    this.quantidade = quantidade;
-	    this.periodo = periodo;
-	    return this;
+	public FabricaMultipla variasMensagens() {
+		return new FabricaMultipla();
 	}
 
-	public FabricaMultipla unicoCliente(Cliente cliente) {
-	    this.cliente = cliente;
-	    return this;
+	public FabricaSimples unicaMensagem() {
+		return new FabricaSimples();
 	}
 
-	public List<EnvioDeMensagem> construir() {
-	    boolean temVariasDatas = periodo != null || quantidade > 0;
-	    boolean temClientes = clientes != null;
-	    boolean temCliente = cliente != null;
+	public class FabricaMultipla {
 
-	    // P/ cada cliente mande várias mensagens
-	    if (temClientes && temVariasDatas) {
-		return enviaComVariosClientesEDatas();
-	    }
+		private List<Cliente> clientes;
+		private int quantidade;
+		private Periodo periodo;
+		private Cliente cliente;
 
-	    // P/ esse cliente mande várias mensagens
-	    else if (temCliente && temVariasDatas) {
-		return enviaComClienteEVariasDatas();
-	    }
+		private FabricaMultipla() {
+		}
 
-	    // Nessa data mande várias mensagens para vários clientes
-	    else if (temClientes && !temVariasDatas) {
-		return enviaComClientesEmUmaData();
-	    }
+		public FabricaMultipla variosClientes(List<Cliente> clientes) {
+			this.clientes = clientes;
+			return this;
+		}
 
-	    throw new IllegalArgumentException("Situação de parâmetros incorreta");
-	}
+		public FabricaMultipla variasMensagens(int quantidade, Periodo periodo) {
+			this.quantidade = quantidade;
+			this.periodo = periodo;
+			return this;
+		}
 
-	private List<EnvioDeMensagem> enviaComVariosClientesEDatas() {
-	    final List<LocalDateTime> datas = gerarDatas();
+		public FabricaMultipla unicoCliente(Cliente cliente) {
+			this.cliente = cliente;
+			return this;
+		}
 
-	    BiFunction<Cliente, List<LocalDateTime>, List<EnvioDeMensagem>> t = (c, ds) -> 
-	    	ds.stream().map(d -> criaMensagem(d, c)).collect(Collectors.toList());
+		public List<EnvioDeMensagem> construir() {
+			boolean temVariasDatas = periodo != null || quantidade > 0;
+			boolean temClientes = clientes != null;
+			boolean temCliente = cliente != null;
 
-	    Function<Cliente, List<EnvioDeMensagem>> f = (cli) -> t.apply(cli, datas);
+			// P/ cada cliente mande várias mensagens
+			if (temClientes && temVariasDatas) {
+				return enviaComVariosClientesEDatas();
+			}
 
-	    List<EnvioDeMensagem> envios = clientes.stream().map(f).flatMap(l -> l.stream())
-		    .collect(Collectors.toList());
+			// P/ esse cliente mande várias mensagens
+			else if (temCliente && temVariasDatas) {
+				return enviaComClienteEVariasDatas();
+			}
 
-	    return envios;
-	}
+			// Nessa data mande várias mensagens para vários clientes
+			else if (temClientes && !temVariasDatas) {
+				return enviaComClientesEmUmaData();
+			}
 
-	private List<EnvioDeMensagem> enviaComClienteEVariasDatas() {
-	    List<EnvioDeMensagem> envios = gerarDatas().stream().map(d -> criaMensagem(d, cliente))
-		    .collect(Collectors.toList());
-	    return envios;
-	}
+			throw new IllegalArgumentException("Situação de parâmetros incorreta");
+		}
 
-	private List<EnvioDeMensagem> enviaComClientesEmUmaData() {
-	    List<EnvioDeMensagem> envios = clientes.stream().map(c -> criaMensagem(dataHoraBase, c))
-		    .collect(Collectors.toList());
-	    return envios;
-	}
+		private List<EnvioDeMensagem> enviaComVariosClientesEDatas() {
+			final List<LocalDateTime> datas = gerarDatas();
 
-	private List<LocalDateTime> gerarDatas() {
-	    if (quantidade < 1) {
-		throw new IllegalArgumentException("O número mínimo de mensagens é 1");
-	    }
-	    if (!dataHoraBase.isAfter(LocalDateTime.now())) {
-		throw new IllegalArgumentException();
-	    }
+			BiFunction<Cliente, List<LocalDateTime>, List<EnvioDeMensagem>> t = (c, ds) -> ds.stream()
+					.map(d -> criaMensagem(d, c)).collect(Collectors.toList());
 
-	    LocalDateTime ultimaData = dataHoraBase;
-	    List<LocalDateTime> datas = new LinkedList<>();
-	    for (int i = 0; i < quantidade; i++) {
-		datas.add(ultimaData);
-		LocalDateTime adiantada = periodo.getAjuste().adiantar(ultimaData);
-		ultimaData = adiantada;
-	    }
-	    return datas;
-	}
+			Function<Cliente, List<EnvioDeMensagem>> f = (cli) -> t.apply(cli, datas);
 
-    }
+			List<EnvioDeMensagem> envios = clientes.stream().map(f).flatMap(l -> l.stream())
+					.collect(Collectors.toList());
 
-    public class FabricaSimples {
+			return envios;
+		}
 
-	private Cliente cliente;
+		private List<EnvioDeMensagem> enviaComClienteEVariasDatas() {
+			List<EnvioDeMensagem> envios = gerarDatas().stream().map(d -> criaMensagem(d, cliente))
+					.collect(Collectors.toList());
+			return envios;
+		}
 
-	private FabricaSimples() {
+		private List<EnvioDeMensagem> enviaComClientesEmUmaData() {
+			List<EnvioDeMensagem> envios = clientes.stream().map(c -> criaMensagem(dataHoraBase, c))
+					.collect(Collectors.toList());
+			return envios;
+		}
+
+		private List<LocalDateTime> gerarDatas() {
+			if (quantidade < 1) {
+				throw new IllegalArgumentException("O número mínimo de mensagens é 1");
+			}
+			if (!dataHoraBase.isAfter(LocalDateTime.now())) {
+				throw new IllegalArgumentException();
+			}
+
+			LocalDateTime ultimaData = dataHoraBase;
+			List<LocalDateTime> datas = new LinkedList<>();
+			for (int i = 0; i < quantidade; i++) {
+				datas.add(ultimaData);
+				LocalDateTime adiantada = periodo.getAjuste().adiantar(ultimaData);
+				ultimaData = adiantada;
+			}
+			return datas;
+		}
 
 	}
 
-	public FabricaSimples unicoCliente(Cliente cliente) {
-	    this.cliente = cliente;
-	    return this;
+	public class FabricaSimples {
+
+		private Cliente cliente;
+
+		private FabricaSimples() {
+
+		}
+
+		public FabricaSimples unicoCliente(Cliente cliente) {
+			this.cliente = cliente;
+			return this;
+		}
+
+		public EnvioDeMensagem construir() {
+			return criaMensagem(dataHoraBase, cliente);
+		}
 	}
 
-	public EnvioDeMensagem construir() {
-	    return criaMensagem(dataHoraBase, cliente);
+	private EnvioDeMensagem criaMensagem(LocalDateTime dataEspecifica, Cliente cliente) {
+		Mensagem mensagem = new Mensagem();
+		mensagem.setConteudo(conteudo);
+		mensagem.setDateHoraDeEnvio(dataEspecifica);
+		mensagem.setTipoDeEnvio(TipoEnvio.SMS);
+		return EnvioDeMensagem.criarEnvio(cliente, mensagem, provedor);
 	}
-    }
-
-    private EnvioDeMensagem criaMensagem(LocalDateTime dataEspecifica, Cliente cliente) {
-	Mensagem mensagem = new Mensagem();
-	mensagem.setConteudo(conteudo);
-	mensagem.setDateHoraDeEnvio(dataEspecifica);
-	mensagem.setTipoDeEnvio(TipoEnvio.SMS);
-	return EnvioDeMensagem.criarEnvio(cliente, mensagem, provedor);
-    }
 }

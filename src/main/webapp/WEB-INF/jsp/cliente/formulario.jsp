@@ -22,7 +22,7 @@
 <div class="form-group">
 	<label for="cliente.dataAniversario">Aniversário</label> <input
 		class="form-control date-field" name="cliente.dataAniversario"
-		value='<fmt:formatDate  value="${cliente.dataAniversario}"/>' /> <span
+		value="<fmt:formatDate  pattern="dd/MM/yyyy"  value="${cliente.dataAniversario}"/>" /> <span
 		class="text-danger">${errors.from('dataAniversario')}</span>
 </div>
 

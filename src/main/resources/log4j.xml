@@ -17,5 +17,11 @@
                 <priority value="INFO" />
                 <appender-ref ref="stdout" />
         </category>
+        
+         <category name="br.com.quandovai">
+                <priority value="INFO" />
+                <appender-ref ref="stdout" />
+        </category>
+                
  
 </log4j:configuration>

@@ -23,44 +23,46 @@ import br.com.quandovai.modelo.servico.MeioDeEnvio;
 @Stateless(name = "EnviaMensagemBean")
 public class EnviaMensagemBean {
 
-    @Resource(lookup = "java:jboss/ee/concurrency/scheduler/pro")
-    private ManagedScheduledExecutorService scheduledService;
+	// @Resource(lookup = "java:jboss/ee/concurrency/scheduler/pro")
+	@Resource
+	private ManagedScheduledExecutorService scheduledService;
 
-    @Inject
-    private EnvioDeMensagemDao envioDao;
+	@Inject
+	private EnvioDeMensagemDao envioDao;
 
-    @Transactional(value = TxType.REQUIRED)
-    public void enviarMensagens() {
-	List<EnvioDeMensagem> todos = envioDao.ultimasMensagens();
-	LinkedBlockingQueue<ScheduledFuture<EnvioDeMensagem>> fila = todos.stream()
-		.map(this::configuraEnvioEspecifico)
-		.collect(LinkedBlockingQueue::new, LinkedBlockingQueue::add, LinkedBlockingQueue::addAll);
-	
-	fila.forEach(f -> {
-	    EnvioDeMensagem envioDeMensagem;
-	    try {
-		envioDeMensagem = f.get();
-		envioDao.atualizar(envioDeMensagem);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
-	});
+	@Transactional(value = TxType.REQUIRED)
+	public void enviarMensagens() {
+		List<EnvioDeMensagem> todos = envioDao.ultimasMensagens();
+		LinkedBlockingQueue<ScheduledFuture<EnvioDeMensagem>> fila = todos
+				.stream()
+				.map(this::configuraEnvioEspecifico)
+				.collect(LinkedBlockingQueue::new, LinkedBlockingQueue::add, LinkedBlockingQueue::addAll);
 
-    }
+		fila.forEach(f -> {
+			EnvioDeMensagem envioDeMensagem;
+			try {
+				envioDeMensagem = f.get();
+				envioDao.atualizar(envioDeMensagem);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 
-    private ScheduledFuture<EnvioDeMensagem> configuraEnvioEspecifico(EnvioDeMensagem e) {
-	long ate = LocalDateTime.now().until(e.getMensagem().horaDeEnvioAjustada(), ChronoUnit.MINUTES);
-	Callable<EnvioDeMensagem> acaoDeEnvio = () -> enviar(e);
-	return scheduledService.schedule(acaoDeEnvio, ate, TimeUnit.MINUTES);
-    }
+	}
 
-    private EnvioDeMensagem enviar(EnvioDeMensagem e) {
-	TipoEnvio tipoDeEnvio = e.getMensagem().getTipoDeEnvio();
-	MeioDeEnvio meioDeEnvio = tipoDeEnvio.getAcao().carregar(e.getProvedor());
-	meioDeEnvio.enviar(e);
-	e.confirmarEnvio();
-	return e;
+	private ScheduledFuture<EnvioDeMensagem> configuraEnvioEspecifico(EnvioDeMensagem e) {
+		long ate = LocalDateTime.now().until(e.getMensagem().horaDeEnvioAjustada(), ChronoUnit.MINUTES);
+		Callable<EnvioDeMensagem> acaoDeEnvio = () -> enviar(e);
+		return scheduledService.schedule(acaoDeEnvio, ate, TimeUnit.MINUTES);
+	}
 
-    }
+	private EnvioDeMensagem enviar(EnvioDeMensagem e) {
+		TipoEnvio tipoDeEnvio = e.getMensagem().getTipoDeEnvio();
+		MeioDeEnvio meioDeEnvio = tipoDeEnvio.getAcao().carregar(e.getProvedor());
+		meioDeEnvio.enviar(e);
+		e.confirmarEnvio();
+		return e;
+
+	}
 
 }
