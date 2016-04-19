@@ -21,7 +21,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Email;
 
-@Entity()
+@Entity
 @Table(name = "clientes")
 @Where(clause = "deletado = 0")
 @SQLDelete(sql = "update clientes set deletado = 1 where id = ?")

@@ -45,7 +45,7 @@
 						
 						<h3>Destinatário</h3>
 						<div>
-							<button type="button" class="btn btn-danger btn-sm btn-remover"
+							<button type="button" class="btn btn-danger btn-sm btn-block btn-remover btn-block"
 										data-toggle="modal" data-target="#modal-seleciona-clientes">
 													Selecionar cliente(s)
 							</button>
@@ -95,7 +95,7 @@
 									</div>	
 									<div>
 										<button type="button" id="btn-envio-simples"
-												class="btn btn-primary pull-left" disabled="disabled">Calcular envios</button>
+												class="btn btn-primary btn-sm pull-left  clearfix" disabled="disabled">Calcular envios</button>
 									</div>
 								  						  
 							  </div>
@@ -146,7 +146,7 @@
 									
 									<div>
 										<button type="button" id="btn-calcula-envios"
-												class="btn btn-primary pull-left" disabled="disabled">Calcular envios</button>
+												class="btn btn-primary btn-sm pull-left clearfix" disabled="disabled">Calcular envios</button>
 									</div>
 								  
 								</div><!-- fim div composto -->
@@ -156,16 +156,12 @@
 						<div class="form-group">
 							 <h3>SMS que serão enviados</h3>
 							 <ul id="envios-sms" class="list-group scroll">
-								<c:forEach items="${envios}" var="envio">
-									<li class="list-group-item">${envio.mensagem.dateHoraDeEnvio} - <span
-												class="pull-right">&times</span></li>
-								</c:forEach>
 							 </ul>
 						</div>
 						
 						<div>
-							<button type="button" id="preparar-envio"
-									class="btn btn-success pull-right" disabled="disabled">Preparar envio</button>
+							<button type="button" id="btn-salvar" 
+									class="btn btn-success btn-sm btn-block pull-right" disabled="disabled">Salvar</button>
 						</div>
 						<hr />
 					

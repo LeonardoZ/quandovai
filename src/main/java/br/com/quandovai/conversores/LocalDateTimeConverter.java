@@ -4,14 +4,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import br.com.caelum.vraptor.Convert;
 import br.com.caelum.vraptor.converter.ConversionException;
 import br.com.caelum.vraptor.converter.ConversionMessage;
 import br.com.caelum.vraptor.converter.Converter;
 
 @Convert(LocalDateTime.class)
+@ApplicationScoped
 public class LocalDateTimeConverter implements Converter<LocalDateTime> {
-
 
     @Override
     public LocalDateTime convert(String value, Class<? extends LocalDateTime> type) {

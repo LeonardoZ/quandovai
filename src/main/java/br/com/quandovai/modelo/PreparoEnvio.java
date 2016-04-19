@@ -1,5 +1,6 @@
 package br.com.quandovai.modelo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,9 +11,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.quandovai.modelo.entidade.Cliente;
-import br.com.quandovai.modelo.entidade.EnvioDeMensagem;
 
-public class PreparoEnvio {
+public class PreparoEnvio implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Size(min = 3)
     private String conteudo;
@@ -21,7 +23,7 @@ public class PreparoEnvio {
     private Provedor provedor;
 
     @Min(1)
-    private int quantidade;
+    private Integer quantidade;
 
     @NotNull
     private Periodo periodo;
@@ -33,13 +35,10 @@ public class PreparoEnvio {
     private List<Long> idsClientes;
     
     private List<Cliente> destinatarios;
-
-    private List<EnvioDeMensagem> enviosProjetados;
-
+    
     public PreparoEnvio() {
 	idsClientes = new LinkedList<>();
 	destinatarios = new LinkedList<>();
-	enviosProjetados = new LinkedList<>();
 	periodo = Periodo.DIARIO;
 	quantidade = 1;
     }
@@ -72,7 +71,7 @@ public class PreparoEnvio {
 	this.provedor = provedor;
     }
 
-    public int getQuantidade() {
+    public Integer getQuantidade() {
 	return quantidade;
     }
 
@@ -112,16 +111,10 @@ public class PreparoEnvio {
 	this.destinatarios = destinatarios;
     }
 
-    public List<EnvioDeMensagem> getEnviosProjetados() {
-	return enviosProjetados;
-    }
-
-    public void setEnviosProjetados(List<EnvioDeMensagem> enviosProjetados) {
-	this.enviosProjetados = enviosProjetados;
-    }
 
     public Cliente primeiroCliente() {
 	return destinatarios.get(0);
     }
+    
 
 }

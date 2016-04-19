@@ -165,13 +165,7 @@
 			<version>4.2.0-RC3</version>
 		</dependency>
 
-		<!-- VRaptor -->
-		<dependency>
-			<groupId>br.com.caelum</groupId>
-			<artifactId>vraptor</artifactId>
-			<version>4.2.0-RC3</version>
-		</dependency>
-
+		
 		<!-- Testes -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -206,11 +200,7 @@
 			<version>1.0.0.Alpha6</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>br.com.prixma</groupId>
-			<artifactId>vraptor-tasks</artifactId>
-			<version>4.2.0</version>
-		</dependency>
+
 	</dependencies>
 
 	<profiles>
@@ -455,6 +445,9 @@
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
+					<compilerArguments>
+						<parameters />
+					</compilerArguments>
 				</configuration>
 			</plugin>
 

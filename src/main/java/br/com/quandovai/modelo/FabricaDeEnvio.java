@@ -19,7 +19,7 @@ public class FabricaDeEnvio {
     private LocalDateTime dataHoraBase;
 
 
-    public static FabricaDeEnvio construirSemModelo(String conteudo, Provedor provedor, LocalDateTime dataHoraBase) {
+    public static FabricaDeEnvio construir(String conteudo, Provedor provedor, LocalDateTime dataHoraBase) {
 	return new FabricaDeEnvio(conteudo, provedor, dataHoraBase);
     }
 
@@ -27,10 +27,6 @@ public class FabricaDeEnvio {
 	this.conteudo = conteudo;
 	this.provedor = provedor;
 	this.dataHoraBase = dataHoraBase;
-    }
-
-    public FabricaDeEnvio construir(String conteudo, Provedor provedor, LocalDateTime dataHoraBase) {
-	return new FabricaDeEnvio(conteudo, provedor, dataHoraBase);
     }
 
     public FabricaMultipla variasMensagens() {

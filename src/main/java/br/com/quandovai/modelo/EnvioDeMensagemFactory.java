@@ -17,7 +17,6 @@ public class EnvioDeMensagemFactory {
     private ModeloDeMensagem modelo;
     private Cliente cliente;
     private Provedor provedor;
-    private List<Cliente> clientes;
     
     public EnvioDeMensagemFactory(ModeloDeMensagem modelo, Provedor provedor) {
 	this.modelo = modelo;
@@ -35,11 +34,6 @@ public class EnvioDeMensagemFactory {
 	return this;
     }
     
-    public EnvioDeMensagemFactory para(List<Cliente> clientes){
-	this.clientes = clientes;
-	return this;
-    }
-
     /**
      * Calcular datas de envio Gerar mensagem para cada data Criar o Envio
      * Agrupar envios em lista

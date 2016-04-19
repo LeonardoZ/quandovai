@@ -2,8 +2,8 @@ package br.com.quandovai.controladores;
 
 import static br.com.caelum.vraptor.view.Results.json;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -17,15 +17,13 @@ import br.com.caelum.vraptor.validator.Validator;
 import br.com.quandovai.daos.ClienteDao;
 import br.com.quandovai.daos.EnvioDeMensagemDao;
 import br.com.quandovai.daos.ModeloDeMensagemDao;
-import br.com.quandovai.modelo.FabricaDeEnvio;
-import br.com.quandovai.modelo.FabricaDeEnvio.FabricaMultipla;
-import br.com.quandovai.modelo.FabricaDeEnvio.FabricaSimples;
 import br.com.quandovai.modelo.PaginatedList;
 import br.com.quandovai.modelo.Periodo;
 import br.com.quandovai.modelo.PreparoEnvio;
 import br.com.quandovai.modelo.Provedor;
 import br.com.quandovai.modelo.entidade.Cliente;
 import br.com.quandovai.modelo.entidade.EnvioDeMensagem;
+import br.com.quandovai.modelo.servico.PreparaEnvioService;
 
 @Controller
 @Path(value = "/envio")
@@ -44,11 +42,20 @@ public class EnvioController {
     private ClienteDao clienteDao;
 
     @Inject
+    private PreparaEnvioService service;
+
+    @Inject
     private Result result;
 
     @Get("/cockpit")
     public void cockpit() {
 
+    }
+
+    @Get("/cadastro")
+    public void cadastro(PreparoEnvio preparo) {
+	result.include("preparo", preparo);
+	carregarDependenciasFormulario();
     }
 
     @Get("")
@@ -63,21 +70,6 @@ public class EnvioController {
 	if (ehBusca) {
 	    result.include("conteudo", busca);
 	}
-    }
-
-    @Get("/cadastro")
-    public void cadastro(PreparoEnvio preparo) {
-	result.include("preparo", preparo);
-	carregarDependenciasFormulario();
-    }
-
-    @Transactional
-    @Post("/adicionar")
-    public void adicionar(PreparoEnvio preparo) {
-	validator.validate(preparo).onErrorRedirectTo(this).cadastro(preparo);
-	// TODO
-	// envioDao.salvar(preparo);
-	result.redirectTo(this).listar(1, "");
     }
 
     @Get("/alterar/{envio.id}")
@@ -116,40 +108,45 @@ public class EnvioController {
     @Post("/calcular")
     public void calcularEnviosAjax(PreparoEnvio preparo) {
 	validator.onErrorSendBadRequest();
+	Consumer<EnvioDeMensagem> callbackSimples = new Consumer<EnvioDeMensagem>() {
 
-	List<Long> ids = preparo.getIdsClientes();
-	List<Cliente> clientes = clienteDao.buscaPorIds(ids);
-	preparo.setDestinatarios(clientes);
-	
-	Provedor provedor = preparo.getProvedor();
-	LocalDateTime dataHoraBase = preparo.getDataHoraBase();
-	String conteudo = preparo.getConteudo();
-	
-	// Fabrica é um Builder
-	FabricaDeEnvio fabrica;
-	fabrica = FabricaDeEnvio.construirSemModelo(conteudo, provedor, dataHoraBase);
-
-	if (preparo.ehUnicoEnvio()) {
-	    FabricaSimples fabricaSimples = fabrica.unicaMensagem();
-	    EnvioDeMensagem envio = fabricaSimples.unicoCliente(preparo.primeiroCliente()).construir();
-	    result.use(json()).from(envio).recursive().serialize();
-	} else {
-	    FabricaMultipla fabricaMultipla = fabrica.variasMensagens();
-	    if (!preparo.ehUnicaData()) {
-		fabricaMultipla.variasMensagens(preparo.getQuantidade(), preparo.getPeriodo());
+	    @Override
+	    public void accept(EnvioDeMensagem envio) {
+		result.use(json()).from(envio).recursive().serialize();
 	    }
-	    if (preparo.ehUnicoCliente()) {
-		fabricaMultipla.unicoCliente(preparo.primeiroCliente());
-	    } else {
-		fabricaMultipla.variosClientes(preparo.getDestinatarios());
-	    }
-	    List<EnvioDeMensagem> envios = fabricaMultipla.construir();
-	    result.use(json()).from(envios).recursive().serialize();
-	}
+	};
 
-	// List<Cliente> encontrados = clienteDao.buscaPorNome(nomeDoCliente);
-	// result.use(json()).from(encontrados,
-	// "clientes").exclude("usuario").serialize();
+	Consumer<List<EnvioDeMensagem>> callbackMultiplo = new Consumer<List<EnvioDeMensagem>>() {
+
+	    @Override
+	    public void accept(List<EnvioDeMensagem> envios) {
+		result.use(json()).from(envios).recursive().serialize();
+	    }
+	};
+	service.preparar(preparo, callbackSimples, callbackMultiplo);
+    }
+
+    @Transactional
+    @Post("/salvar")
+    public void salvarEnviosAjax(PreparoEnvio preparo) {
+	validator.onErrorSendBadRequest();
+	Consumer<EnvioDeMensagem> callbackSimples = new Consumer<EnvioDeMensagem>() {
+
+	    @Override
+	    public void accept(EnvioDeMensagem envio) {
+		envioDao.salvar(envio);
+	    }
+	};
+
+	Consumer<List<EnvioDeMensagem>> callbackMultiplo = new Consumer<List<EnvioDeMensagem>>() {
+
+	    @Override
+	    public void accept(List<EnvioDeMensagem> envios) {
+		envioDao.salvar(envios);
+	    }
+	};
+	service.preparar(preparo, callbackSimples, callbackMultiplo);
+	result.nothing();
     }
 
     private void carregarDependenciasFormulario() {
@@ -159,7 +156,7 @@ public class EnvioController {
     }
 
     @Get("")
-    public void listarClientes(Integer page, String busca) {
+    public void listarClientesAjax(Integer page, String busca) {
 	if (page == null) {
 	    page = 0;
 	}

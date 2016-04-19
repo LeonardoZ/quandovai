@@ -26,8 +26,8 @@ public class EnvioDeMensagemDao {
 	return dao.todos();
     }
 
-    public void salvar(EnvioDeMensagem mensagem) {
-	dao.salvar(mensagem);
+    public void salvar(EnvioDeMensagem envio) {
+	dao.salvar(envio);
     }
 
     public void salvar(List<EnvioDeMensagem> mensagens) {
@@ -53,12 +53,12 @@ public class EnvioDeMensagemDao {
 	return resultados;
     }
 
-    public void remover(EnvioDeMensagem mensagem) {
-	dao.remover(mensagem);
+    public void remover(EnvioDeMensagem envio) {
+	dao.remover(envio);
     }
 
-    public void atualizar(EnvioDeMensagem mensagem) {
-	dao.atualizar(mensagem);
+    public void atualizar(EnvioDeMensagem envio) {
+	dao.atualizar(envio);
 
     }
 
