@@ -96,10 +96,6 @@
 						</c:choose>
 					</tbody>
 					</table>
-					  <template:paginationComponent search="${termoDeBusca}"
-							paginatedList="${mensagensPaginadas}" page="${param.page}"
-							action="${urlLista}" />
-
 				</div>
 			</section>
 		</div>

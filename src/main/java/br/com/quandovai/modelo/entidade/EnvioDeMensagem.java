@@ -35,7 +35,9 @@ import br.com.quandovai.modelo.StatusEntrega;
 				+ "( (e.mensagem.dateHoraDeEnvio < :final) " + "and (e.status = :agendado or e.status = :reenviar) ) "
 				+ "order by e.mensagem.dateHoraDeEnvio desc"),
 		@NamedQuery(name = "envioMensagem.buscaPorConteudo", query = "select m from EnvioDeMensagem m where m.mensagem.conteudo like :conteudo"),
-		@NamedQuery(name = "envioMensagem.countPorConteudo", query = "select count(m) from EnvioDeMensagem m where m.mensagem.conteudo like :conteudo") })
+		@NamedQuery(name = "envioMensagem.countPorConteudo", query = "select count(m) from EnvioDeMensagem m where m.mensagem.conteudo like :conteudo"),
+		@NamedQuery(name = "envioMensagem.buscaCadastradas", query = "select m from EnvioDeMensagem m order by m.id desc"),
+		@NamedQuery(name = "envioMensagem.countPorCadastradas", query = "select count(m) from EnvioDeMensagem m") })
 
 public class EnvioDeMensagem extends Entidade {
 

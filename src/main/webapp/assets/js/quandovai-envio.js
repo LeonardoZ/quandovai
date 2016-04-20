@@ -243,11 +243,11 @@ $(function() {
 		}
 		
 		var configuraPreparoCalculado = function(){
-			var conteudo = encodeURI($txtConteudo.val());
-			var provedor = encodeURI($selProvedor.val());
+			var conteudo = $txtConteudo.val();
+			var provedor = $selProvedor.val();
 			var dataBase = $txtDataBase.val();
-			var quantidade = encodeURI($txtQuantidade.val());
-			var periodo = encodeURI($txtPeriodo.val());
+			var quantidade = $txtQuantidade.val();
+			var periodo = $txtPeriodo.val();
 			var idsClientes = shared["cli"];
 			
 			
@@ -294,8 +294,8 @@ $(function() {
 		}
 		
 		var configuraPreparoSimples = function (){
-			var conteudo = encodeURI($txtConteudo.val());
-			var provedor = encodeURI($selProvedorSimples.val());
+			var conteudo = $txtConteudo.val();
+			var provedor = $selProvedorSimples.val();
 			var dataBase = $txtDataBaseSimples.val();
 			var quantidade = 1
 			var periodo = "DIARIO";

@@ -75,5 +75,12 @@ public class EnvioDeMensagemDao {
 	public PaginatedList paginado(int page, int max) {
 		return dao.paginado(page, max);
 	}
+	
+	public PaginatedList paginadoCadastradas(int page, int max) {
+		TypedQuery<EnvioDeMensagem> resultados = dao.getManager().createNamedQuery("envioMensagem.buscaCadastradas",
+				EnvioDeMensagem.class);
+		TypedQuery<Number> contagem = dao.getManager().createNamedQuery("envioMensagem.countPorCadastradas", Number.class);
+		return dao.paginado(resultados, contagem, page, max);
+	}
 
 }

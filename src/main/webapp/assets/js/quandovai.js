@@ -198,5 +198,110 @@ $(function() {
 		$inputBusca.bind("blur", avaliaPodeBuscar);
 
 	}());
+	
+	
+	var moduloCarregaTabelas = (function(){
+		var $cadastradasBody = $("#mensagens-cadastradas-tbody");
+		var $pagina = $("#mensagens-cadastradas-page");
+		var $proximo = $("#mensagens-cadastradas-next");
+		var $anterior =  $("#mensagens-cadastradas-prev");
+		var $numPagina = $("#num-pagina");
+		var temProximo = false;
+		
+		var carregaTabelaDeCadastradas = function() {
+			$cadastradasBody.empty();
+			var pagina = Number.parseInt($pagina.val());
+			
+			var url = "/quandovai/mensagens/cadastradas?page="+pagina;
+			$.ajax({
+				type : "GET",
+				url : url,
+				cache: false,
+				success : function (data){
+					console.log(data);
+					var envios = data.paginatedList.currentList;
+					if (envios.length === 0) {
+						$proximo.attr("disabled","disabled");
+						return;
+					} else {
+						$proximo.removeAttr("disabled");
+					}
+					
+					var $linhas = [];
+					
+					for (var i = 0; i < envios.length; i++) {
+						var $linha = $("<tr />");
+						var envio = envios[i];
+						
+						// sera enviado em
+						var data = envio.mensagem.dateHoraDeEnvio.date,
+							tempo = envio.mensagem.dateHoraDeEnvio.time,
+							dia = data.day, mes = data.month, ano = data.year,
+							hora = tempo.hour, minuto = tempo.minute;
+						var data = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
+						var $data = $("<td />", {html: data});
+						
+						// conteudo
+						var conteudo = envio.mensagem.conteudo;
+						var $conteudo = $("<td />", {html: conteudo});
+						
+						// cliente
+						var cliente = envio.cliente.nomeCompleto;
+						var $cliente = $("<td />", {html: cliente});
+						
+						// provedor
+						var provedor = envio.provedor;
+						var $provedor = $("<td />", {html: provedor});
+						
+						// status
+						var status = envio.status;
+						var $status = $("<td />", {html: status});
+						
+						$linha.append($data);
+						$linha.append($conteudo);
+						$linha.append($cliente);
+						$linha.append($provedor);
+						$linha.append($status);
+						
+						$linhas.push($linha);
+					}
+					
+					$cadastradasBody.append($linhas);
+					
+				}
+			});
+	
+		};
+		
+		var proximoClicked = function(evt) {
+			var pagina = Number.parseInt($pagina.val());
+			var proximaPagina = pagina + 1;
+			if (proximaPagina > 0) {
+				$anterior.removeAttr("disabled");
+			}
+			$pagina.val(proximaPagina);
+			$numPagina.html(proximaPagina + 1);
+			carregaTabelaDeCadastradas();
+		}
+		
+		var anteriorClicked = function(evt) {
+			var pagina = Number.parseInt($pagina.val());
+			var proximaPagina = pagina - 1;
+			
+			if(proximaPagina === 0) {
+				$anterior.attr("disabled","disabled");
+			} 
+			$pagina.val(proximaPagina);
+			$numPagina.html(proximaPagina + 1);
+			carregaTabelaDeCadastradas();	
+		}
+		
+		carregaTabelaDeCadastradas();
+		$anterior.bind("click", anteriorClicked);
+		$proximo.bind("click", proximoClicked);
+		
+		
+	})();
+	
 
 });
