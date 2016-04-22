@@ -208,10 +208,8 @@ $(function() {
 		var $numPagina = $("#num-pagina");
 		var temProximo = false;
 		
-		var carregaTabelaDeCadastradas = function() {
+		var carregaTabelaDeCadastradas = function(pagina) {
 			$cadastradasBody.empty();
-			var pagina = Number.parseInt($pagina.val());
-			
 			var url = "/quandovai/mensagens/cadastradas?page="+pagina;
 			$.ajax({
 				type : "GET",
@@ -232,7 +230,7 @@ $(function() {
 					for (var i = 0; i < envios.length; i++) {
 						var $linha = $("<tr />");
 						var envio = envios[i];
-						
+						console.log("ID:" +envio.id);
 						// sera enviado em
 						var data = envio.mensagem.dateHoraDeEnvio.date,
 							tempo = envio.mensagem.dateHoraDeEnvio.time,
@@ -281,7 +279,7 @@ $(function() {
 			}
 			$pagina.val(proximaPagina);
 			$numPagina.html(proximaPagina + 1);
-			carregaTabelaDeCadastradas();
+			carregaTabelaDeCadastradas(proximaPagina);
 		}
 		
 		var anteriorClicked = function(evt) {
@@ -293,10 +291,10 @@ $(function() {
 			} 
 			$pagina.val(proximaPagina);
 			$numPagina.html(proximaPagina + 1);
-			carregaTabelaDeCadastradas();	
+			carregaTabelaDeCadastradas(proximaPagina);	
 		}
 		
-		carregaTabelaDeCadastradas();
+		carregaTabelaDeCadastradas(0);
 		$anterior.bind("click", anteriorClicked);
 		$proximo.bind("click", proximoClicked);
 		

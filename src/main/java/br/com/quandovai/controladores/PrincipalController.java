@@ -25,7 +25,6 @@ public class PrincipalController {
 	
 	@Get("/mensagens/cadastradas")
 	public void carregaMensagensCadastradasAjax(int page) {
-
 		PaginatedList paginado = envioDao.paginadoCadastradas(page, 10);
 		result.use(json()).from(paginado).recursive().serialize();
 	
