@@ -133,8 +133,6 @@
 
 	</div>
 	<!-- ./wrapper -->
-  	<script data-main="<c:url value='/assets/js/main.js' />" src="<c:url value='/assets/js/require.js' />"></script>	
-	
 	<!-- jQuery 2.0.2 -->
 	<script src="<c:url value='/assets/js/jquery.min.js'/>"
 		type="text/javascript" type="text/javascript"></script>
@@ -154,20 +152,12 @@
 	<script
 		src="<c:url value='/assets/js/plugins/moment/locales.min.js'/>"
 		type="text/javascript"></script>
-		
-	<script
-		src="<c:url value='/assets/js/plugins/moment/moment-with-locales.min.js'/>"
-		type="text/javascript"></script>
-	
-	<script
-		src="<c:url value='/assets/js/plugins/datepicker/bootstrap-datepicker.js'/>"
-		type="text/javascript"></script>
-	
+
 	<script
 		src="<c:url value='/assets/js/plugins/bs-datetimepicker/bootstrap-datetimepicker.min.js'/>"
 		type="text/javascript"></script>
 		
-	<script src="<c:url value='/assets/js/plugins/chart.js'/>"
+	<script src="<c:url value='/assets/js/plugins/chart/chart.bundle.min.js'/>"
 		type="text/javascript"></script>
 
 	<script src="<c:url value='/assets/js/jquery.mask.min.js'/>"
