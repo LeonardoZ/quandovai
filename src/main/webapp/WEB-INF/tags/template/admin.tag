@@ -12,6 +12,8 @@
 <meta name="description" content="Developed By M Abdur Rokib Promy">
 <meta name="keywords"
 	content="Admin, Bootstrap 3, Template, Theme, Responsive">
+	
+
 <!-- bootstrap 3.0.2 -->
 <link href="<c:url value='/assets/css/bootstrap.min.css' />"
 	rel="stylesheet" type="text/css" />
@@ -131,27 +133,24 @@
 
 	</div>
 	<!-- ./wrapper -->
-
+  	<script data-main="<c:url value='/assets/js/main.js' />" src="<c:url value='/assets/js/require.js' />"></script>	
+	
 	<!-- jQuery 2.0.2 -->
 	<script src="<c:url value='/assets/js/jquery.min.js'/>"
 		type="text/javascript" type="text/javascript"></script>
 
-	<!-- jQuery UI 1.10.3 -->
 	<script src="<c:url value='/assets/js/jquery-ui-1.10.3.min.js'/>"
 		type="text/javascript"></script>
 
-	<!-- Bootstrap -->
 	<script src="<c:url value='/assets/js/bootstrap.min.js'/>"
 		type="text/javascript">
 		
 	</script>
 
-	<!-- Bootstrap datepicker -->
 	<script
 		src="<c:url value='/assets/js/plugins/moment/moment.min.js'/>"
 		type="text/javascript"></script>
 		
-	<!-- Bootstrap datepicker -->
 	<script
 		src="<c:url value='/assets/js/plugins/moment/locales.min.js'/>"
 		type="text/javascript"></script>

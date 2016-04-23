@@ -413,7 +413,7 @@
 		
 	};
 
-})(jQuery);
+})(jquery);
 
 // polyfill, provide a fallback if the console doesn't exist
 if (!console) {
