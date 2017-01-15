@@ -1,3 +1,3 @@
 src/main/webapp/assets/* linguist-vendored
-quandovai-envio.js linguist-vendored=false
-quandovai.js linguist-vendored=false
+src/main/webapp/assets/js/quandovai-envio.js linguist-vendored=false
+src/main/webapp/assets/js/quandovai.js linguist-vendored=false
